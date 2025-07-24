@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>🗑️ Supprimer la tâche</title>
+    <style>
+        body {
+            background: #fff0f0;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .card {
+            background-color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.2);
+            animation: zoomIn 0.7s ease-in-out;
+            text-align: center;
+        }
+        h2 {
+            color: #cc0000;
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 25px;
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #a00000;
+            transform: scale(1.05);
+        }
+
+        @keyframes zoomIn {
+            from {opacity: 0; transform: scale(0.8);}
+            to {opacity: 1; transform: scale(1);}
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🗑️ Êtes-vous sûr de vouloir supprimer cette tâche {{ user.username }}?</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit">Oui, supprimer ❌</button>
+        </form>
+    </div>
+   
+</body>
+<footer style="text-align: center;color: #999;font-size: 13px;padding: 10px;margin-top: 50px;">
+    ©Tous droits réservés - Don But 2025
+ </footer>
+</html>

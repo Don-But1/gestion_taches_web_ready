@@ -1,0 +1,161 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            background: linear-gradient(to right, #e0eafc, #cfdef3);
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            width: 350px;
+            text-align: center;
+        }
+
+        .welcome-message {
+  text-align: center;
+  margin-bottom: 20px;
+  animation: slide-in 1.2s ease-out;
+        }
+
+    .welcome-message h2 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #2c3e50;
+  font-family: 'Segoe UI', sans-serif;
+        }
+
+    .app-name {
+  color: #2980b9;
+  font-weight: bold;
+  animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    .highlight {
+  color: #e67e22;
+    }
+
+    @keyframes glow {
+  from {
+    text-shadow: 0 0 5px #2980b9;
+  }
+  to {
+    text-shadow: 0 0 15px #2980b9;
+  }
+}
+
+    @keyframes slide-in {
+  from {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+        .fade-in {
+  animation: fade-in 1.5s ease-in;
+}
+
+    @keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+        .login-container input[type="text"],
+        .login-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        .login-container button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+        }
+
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+
+        .login-container p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-container a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .error-message{
+            color: white;
+            background-color: #dc3545;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            animation: shake 0.3s ease-in-out;
+        }
+        @keyframes shake{
+            0% {transform: translateX(0);}
+            25%{transform: translateX(-5px);}
+            50%{transform: translateX(5px);}
+            75%{transform: translateX(-5px);}
+            100%{transform: translateX(0);}
+        }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="welcome-message">
+            <h2>
+              👋 <span class="fade-in">Bienvenue dans</span> 
+              <span class="app-name">DonB.<span class="highlight">Tâches</span></span>
+            </h2>
+            <h2>Connectez-vous</h2>
+          </div>
+          
+        {% if error %}
+        <div class="error-message">{{ error }}</div>
+        {% endif %}
+        <form method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Nom d'utilisateur" autocomplete="off" required>
+            <input type="password" name="password" placeholder="Mot de passe" autocomplete="off" required>
+            <button type="submit">Se connecter</button>
+        </form>
+        <p>Vous n'avez pas de compte ? <a href="{% url 'register' %}">S'inscrire</a></p>
+    </div>
+</body>
+</html>
