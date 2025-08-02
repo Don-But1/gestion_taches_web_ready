@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
-from .forms import FormulaireInscription
-from django.contrib.auth.decorators import login_required
 from .forms import TacheForm
+from django.contrib.auth.decorators import login_required
+from .models import UserProfile
 from .models import Tache
+
 from django.shortcuts import render, redirect, get_object_or_404
 
 def login_view(request):
@@ -23,17 +24,29 @@ def login_view(request):
 
 def register_view(request):
     if request.method == 'POST':
-        form = FormulaireInscription(request.POST)
+        
+        form = FormulaireInscription(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+            photo = form.cleaned_data.get('photo')
+
+            user = User.objects.create_user(username=username, email=email, password=password)
+            UserProfile.objects.create(user=user, photo=photo)
+
+            return redirect('login')
     else:
         form = FormulaireInscription()
-    return render(request, 'register.html', {'form': form})
+    
+    context = {
+        'form': form
+    }
+    return render(request, 'register.html', context)
+
 
 def home_view(request):
-    taches = Tache.objects.filter(utilisateur=request.user)
+    taches = Tache.objects.filter(utilisateur=request.user , is_archived=False)
     return render(request, 'home.html',{'taches': taches})
 
 def logout_view(request):
@@ -70,7 +83,24 @@ def modifier_tache(request, tache_id):
 def supprimer_tache(request, tache_id):
     tache = get_object_or_404(Tache, id=tache_id, utilisateur=request.user)
     if request.method == 'POST':
-        tache.delete()
+        tache.is_archived = True
+        tache.save()
         return redirect('home')
     return render(request, 'supprimer_tache.html', {'tache': tache})
 
+@login_required
+def liste_taches_archivees(request):
+    """
+    Affiche toutes les tâches archivées de l'utilisateur connecté.
+    """
+    # Filtrez les tâches par l'utilisateur et par l'état archivé
+    taches_archivees = Tache.objects.filter(utilisateur=request.user, is_archived=True).order_by('-date_fin')
+    
+    # Renvoyez-les au template
+    return render(request, 'taches/liste_taches_archivees.html', {'taches_archivees': taches_archivees})
+    
+@login_required
+def supprimer_tache_definitivement(request, id):
+    tache = get_object_or_404(Tache, id=id, utilisateur=request.user)
+    tache.delete()
+    return redirect('archives')

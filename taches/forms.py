@@ -1,23 +1,33 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from .models import UserProfile # Importez le modèle UserProfile
 from .models import Tache
 
-class FormulaireInscription(UserCreationForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        for field in self.fields.values():
-            field.help_text = None  # Supprime les textes "Requis. 150 caractères..." etc.
-            class Meta:
-                model = User
-                fields = ['username', 'password1', 'password2']
-                labels = {
-                    'username': 'Nom d’utilisateur',
-                    'password1': 'Mot de passe',
-                    'password2': 'Confirmer le mot de passe',
-                    }
+class FormulaireInscription(forms.ModelForm):
+    # Les champs que vous voulez afficher sur la page
+    username = forms.CharField(label="Nom d'utilisateur")
+    email = forms.EmailField(label="Adresse e-mail")
+    password = forms.CharField(widget=forms.PasswordInput, label="Mot de passe")
+    password2 = forms.CharField(widget=forms.PasswordInput, label="Confirmer le mot de passe")
+    
+    # Le champ pour la photo de profil
+    photo = forms.ImageField(required=False, label="Photo de profil")
+
+class Meta:
+        model = User
+        fields = ['username', 'email']
+
+def clean(self):
+        # ... (Votre logique de validation des mots de passe reste la même)
+        cleaned_data = super().clean()
+        password = cleaned_data.get('password')
+        password2 = cleaned_data.get('password2')
+        if password and password2 and password != password2:
+            raise forms.ValidationError("Les mots de passe ne correspondent pas.")
+        return cleaned_data
 
 class TacheForm(forms.ModelForm):
     class Meta:
         model = Tache
-        fields = ['titre', 'description', 'statut']
+        fields = ['titre', 'description', 'statut', 'date_debut', 'date_fin']
+

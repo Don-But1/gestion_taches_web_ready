@@ -1,3 +1,4 @@
+{%load static %}
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -6,7 +7,7 @@
     <style>
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
+            font-family:Georgia, 'Times New Roman', Times, serif;
             background-color: #f7f9fc;
         }
 
@@ -16,17 +17,19 @@
             left: 0;
             width: 220px;
             height: 95vh;
-            background-color: #007BFF;
+            background-color:rgb(42, 43, 3);
             color: white;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             padding: 20px;
+            
         }
         .sidebar-content{
             display: flex;
             flex-direction: column;
             gap: 20px;
+            
         }
         .carte-bienvenue {
             background-color: white;
@@ -52,14 +55,15 @@
             margin: 10px 0;
             text-decoration: none;
             color: black;
-            background-color: white;
+            background-color:wheat;
             padding: 8px 12px;
             border-radius: 5px;
             text-align: center;
+            margin-bottom: 90px;
         }
 
         .sidebar a:hover {
-            background-color: #003d80;
+            background-color: #27afd1;
         }
 
         .main {
@@ -126,7 +130,35 @@
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+       
+    /* ... Votre CSS existant ... */
+    .profile-photo {
+        width: 80px; /* Taille de la photo */
+        height: 80px;
+        border-radius: 50%; /* Pour la forme ronde */
+        object-fit: cover;
+        margin-right: 20px;
+        border: 2px solid #007bff; /* Bordure de votre choix */
+    }
+</style>
+...
+<body>
+    ...
+    <div class="sidebar-content">
+        <div class="carte-bienvenue">
+            {% if user.is_authenticated %}
+                {% if user.userprofile.photo %}
+                    <img src="{{ user.userprofile.photo.url }}" alt="Photo de profil" class="profile-photo">
+                {% else %}
+                    <img src="{% static 'images/default_profile.png' %}" alt="Photo par défaut" class="profile-photo">
+                {% endif %}
+                <h2>{{ user.username }}</h2>
+            {% else %}
+                <h2>Bienvenue</h2>
+            {% endif %}
+        </div>
+
+    </div>
     </style>
 </head>
 <body>
@@ -134,8 +166,9 @@
     <div class="sidebar">
         <div class="sidebar-content">
             <div class="carte-bienvenue">
-        <h2>Bienvenue {{ user.username }}😎</h2></div>
-        <a href="{% url 'ajouter_tache' %}">➕ Ajouter une tâche</a></div>
+        <h2>Bienvenue dans DonB.Taches😎</h2></div>
+        <a href="{% url 'ajouter_tache' %}">➕ Ajouter une tâche</a>
+        <a href="{% url 'archives' %}">Archives</a></div>
         <div class="sidebar-footer">
         <a href="{% url 'logout' %}">🚪 Se déconnecter</a>
         </div>
@@ -143,13 +176,16 @@
 
     <!-- byenye biko ku corps -->
     <div class="main">
-        <h1 class="titre-centre">📋 Vos tâches Journalières chèr(e) {{ user.username }}</h1>
+        <h1 class="titre-centre">📋 CARNET DE TACHES</h1>
 
         {% for tache in taches %}
         <div class="tache-card">
             <div class="tache-info">
                 <strong>{{ tache.titre }}</strong> 
-               <p>Date d'exécution de la tache :  {{ tache.date_creation }}<br></p>
+                <p>Vous allez recevoir un meassage via votre mail une fois que l'heure de la tache est proche</p>
+               <p>Date du Debut : {{ tache.date_debut }}<br></p>
+               <p>Date de Fin :{{ tache.date_fin }}<br></p>
+               
                 {{ tache.description }}<br>
                 <p>Statut : 
                     {% if tache.statut == "terminee" %} ✅ Terminée 
@@ -167,7 +203,7 @@
         {% endfor %}
     </div>
    
-    <footer style="text-align: center;color: #999;font-size: 13px;padding: 10px;margin-top: 50px;">
+    <footer style="text-align:justify;color: #999;font-size: 13px;padding: 30px;margin-top: 100px;">
        ©Tous droits réservés - Don But 2025
     </footer>
 </body>

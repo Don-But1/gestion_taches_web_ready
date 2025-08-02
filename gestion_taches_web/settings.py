@@ -72,3 +72,43 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/accueil/'
+# Configuration de l'envoi d'emails
+# Pour le développement, les emails seront affichés dans la console.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Pour une configuration réelle avec un serveur SMTP (par exemple, Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'dondedieuirenge@gmail.com'
+EMAIL_HOST_PASSWORD = '366529Don'
+
+# -----------------------------------------------------------------------------
+# Celery
+# -----------------------------------------------------------------------------
+# Celery nécessite un "broker" (un courtier) pour envoyer des messages entre les tâches.
+# Redis est le choix le plus courant et le plus performant.
+# Assurez-vous que Redis est installé et démarré sur votre machine.
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# Celery Beat est le planificateur qui exécute les tâches à des intervalles réguliers.
+CELERY_BEAT_SCHEDULE = {
+    'check-and-send-notifications': {
+        'task': 'taches.tasks.check_and_send_notifications',
+        'schedule': 60.0,  # Exécuter cette tâche toutes les 60 secondes
+        'args': (),
+    },
+    'archive-old-tasks': {
+        'task': 'taches.tasks.archive_old_tasks',
+        'schedule': 3600.0,  # Exécuter cette tâche toutes les heures
+        'args': (),
+    }
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

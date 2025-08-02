@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archives des Tâches</title>
+<style>
+/* Styles pour le corps et le conteneur principal */
+body {
+font-family: 'Arial', sans-serif;
+background-color: #f4f4f4;
+color: #333;
+margin: 0;
+padding: 0;
+}
+.container {
+max-width: 800px;
+margin: 40px auto;
+padding: 20px;
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+text-align: center;
+color: #6c757d;
+}
+    /* Styles pour les boutons */
+    .button {
+        display: inline-block;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        color: white;
+        background-color: #007bff;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Styles pour la liste des tâches archivées */
+    .task-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+    .task-item {
+        background-color: #e9ecef;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border-left: 5px solid #6c757d;
+    }
+    h2 {
+        margin: 0 0 10px;
+        font-size: 1.5em;
+    }
+    p {
+        margin: 0 0 5px;
+        color: #054063;
+    }
+.container{
+    display:flexbox;
+    animation: rebond 5s;
+
+}
+
+@keyframes rebond {
+    from {opacity: 0; transform: translateX(-50px);}
+    to {opacity: 1; transform: translateX(0);}
+}
+</style>
+
+</head>
+<body>
+   
+    <div class="container">
+        <h1>Archives des tâches</h1>
+        <a href="{% url 'home' %}" class="button">Retour à la Liste des tâches en cours</a>
+    
+        {% if taches_archivees %}
+            <ul class="task-list">
+                {% for tache in taches_archivees %}
+                <li class="task-item">
+                  <h2>{{ tache.titre }}</h2>
+                  <p>{{ tache.description|default:"Aucune description" }}</p>
+                  <p>Début : {{ tache.date_debut|date:"d/m/y H:i" }}</p>
+                  <p>Fin : {{ tache.date_fin|date:"d/m/y H:i" }}</p>
+                  
+                  <a href="{% url 'supprimer_tache_definitivement' tache.id %}" class="btn btn-danger btn-sm">Supprimer définitivement</a>
+                </li>
+              {% empty %}
+                <p>Pas de taches pour le moment.</p>
+              {% endfor %}
+              
+        {% endif %} 
+    </div>
+</body>
+</html>
+
+
+
