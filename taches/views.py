@@ -5,6 +5,8 @@ from .forms import TacheForm
 from django.contrib.auth.decorators import login_required
 from .models import UserProfile
 from .models import Tache
+from django.contrib.auth.models import User
+from .forms import FormulaireInscription
 
 from django.shortcuts import render, redirect, get_object_or_404
 

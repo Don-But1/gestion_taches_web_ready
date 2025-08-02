@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile # Importez le modèle UserProfile
 from .models import Tache
 
-class FormulaireInscription(forms.ModelForm):
+class FormulaireInscription(forms.Form):
     # Les champs que vous voulez afficher sur la page
     username = forms.CharField(label="Nom d'utilisateur")
     email = forms.EmailField(label="Adresse e-mail")
@@ -13,7 +13,7 @@ class FormulaireInscription(forms.ModelForm):
     # Le champ pour la photo de profil
     photo = forms.ImageField(required=False, label="Photo de profil")
 
-class Meta:
+    class Meta:
         model = User
         fields = ['username', 'email']
 
